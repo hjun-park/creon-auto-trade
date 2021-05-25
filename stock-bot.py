@@ -68,7 +68,7 @@ class CpEvent:
                 item['코드'] = code
                 item['종목명'] = name
                 cate = self.client.GetDataValue(2, i)
-                if (update == ord('c')):
+                if update == ord('c'):
                     newcancel = '[취소]'
                 if cate in self.diccode:
                     item['특이사항'] = newcancel + self.diccode[cate]
@@ -125,6 +125,7 @@ class CpPBMarkeWatch(CpPublish):
     def __init__(self):
         super().__init__('marketwatch', 'CpSysDib.CpMarketWatchS')
 
+
 #
 # # CpPBMarkeWatch:
 # class CpPB8092news(CpPublish):
@@ -141,6 +142,7 @@ class CpRpMarketWatch:
         return
 
     def Request(self, code):
+        code_list = []
         self.objpbMarket.Unsubscribe()
         # self.objpbNews.Unsubscribe()
 
@@ -157,6 +159,7 @@ class CpRpMarketWatch:
 
         cnt = self.objStockMst.GetHeaderValue(2)  # 수신 개수
         print(cnt)
+        cnt = 2
         for i in range(cnt):
             item = {}
 
@@ -168,17 +171,16 @@ class CpRpMarketWatch:
             cate = self.objStockMst.GetDataValue(3, i)
             item['특이사항'] = self.objStockMst.GetDataValue(4, i)
             print(item)
+            code_list.append(item['코드'])
 
-
-        return True
-
+        return code_list
 
 
 if __name__ == "__main__":
     cprq = CpRpMarketWatch()
-    cprq.Request('*')
+    code_list = cprq.Request('*')
+    print(code_list)
     # app = QApplication(sys.argv)
     # myWindow = MyWindow()
     # myWindow.show()
     # app.exec_()
-
