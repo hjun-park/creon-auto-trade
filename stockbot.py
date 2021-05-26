@@ -4,6 +4,7 @@ import win32com.client
 import ctypes
 import pandas as pd
 import os
+import time
 
 g_objCodeMgr = win32com.client.Dispatch('CpUtil.CpCodeMgr')
 g_objCpStatus = win32com.client.Dispatch('CpUtil.CpCybos')
@@ -159,7 +160,7 @@ class CpRpMarketWatch:
 
         cnt = self.objStockMst.GetHeaderValue(2)  # 수신 개수
         print(cnt)
-        cnt = 2
+        cnt = 5
         for i in range(cnt):
             item = {}
 
@@ -178,8 +179,10 @@ class CpRpMarketWatch:
 
 if __name__ == "__main__":
     cprq = CpRpMarketWatch()
-    code_list = cprq.Request('*')
-    print(code_list)
+    while True:
+        code_list = cprq.Request('*')
+        print(code_list)
+        time.sleep(60)
     # app = QApplication(sys.argv)
     # myWindow = MyWindow()
     # myWindow.show()

@@ -1,11 +1,11 @@
 import win32com.client
 import requests
 from datetime import datetime
-import time, ctypes
+import time, ctypes, sys
 import pandas as pd
 from TOCKEN import myToken
+import stockbot
 
-buy_amount = 0
 # =======================================
 # 크레온 플러스 공통 OBJECT
 # =======================================
@@ -21,10 +21,10 @@ g_objCodeMgr = win32com.client.Dispatch('CpUtil.CpCodeMgr')
 g_objCpStatus = win32com.client.Dispatch('CpUtil.CpCybos')
 g_objCpTrade = win32com.client.Dispatch('CpTrade.CpTdUtil')
 
+
 # =======================================
 # Stock Bot
 # =======================================
-
 
 
 def post_message(token, channel, text):
@@ -470,7 +470,6 @@ def get_stock_balance(code):
     
 '''
 
-
 '''
     1. 
 '''
@@ -490,15 +489,26 @@ if __name__ == '__main__':
     # # print(buy_etf('A243890')) # 종목에 대해 최유리 지정가 FOK 매수
     # # print(sell_all())     # 보유 종목 최유리 지정가로
 
-
-
-'''
-        # 변동성 돌파 전략 + 이동평균선 5일 + 이동평균선 10일 3가지 전략 활용
+    # 변동성 돌파 전략 + 이동평균선 5일 + 이동평균선 10일 3가지 전략 활용
     try:
-        symbol_list = ['A243890', 'A243880', 'A122630', 'A305720',
-                       'A138540']  # 거래하고자 하는 종목코드(다음금융 등에서 확인가능->링크에 종목코드 나와있음)
+        # RUN = True
+        # symbol_list = []
+        #
+        # while RUN:
+        #     symbol_list = []
+        #     with open('stock_code.txt', 'r') as file_data:
+        #         for code in file_data:
+        #             code = code.rstrip()
+        #             if code == '1':
+        #                 RUN = False
+        #                 break
+        #             symbol_list.append(code)
+        #     print(symbol_list)
+        #     time.sleep(2)
+
+        symbol_list = ['A065370', 'A250030', 'A096690', 'A005320', 'A299900']  # 거래하고자 하는 종목코드(다음금융 등에서 확인가능->링크에 종목코드 나와있음)
         bought_list = []  # 매수 완료된 종목 리스트
-        target_buy_count = 5  # 매수할 종목 수
+        target_buy_count = len(symbol_list)  # 매수할 종목 수
         buy_percent = 0.2  # 각각 매수할 종목을 몇퍼센트씩 구매할 것인지
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
@@ -509,6 +519,11 @@ if __name__ == '__main__':
         printlog('종목별 주문 금액 :', buy_amount)
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldout = False
+
+        cprq = stockbot.CpRpMarketWatch()
+        code_list = cprq.Request('*')
+        printlog(str(code_list))
+        dbgout(str(code_list))
 
         while True:
             t_now = datetime.now()
@@ -542,4 +557,3 @@ if __name__ == '__main__':
             time.sleep(3)
     except Exception as ex:
         dbgout('`main -> exception! ' + str(ex) + '`')
-'''
